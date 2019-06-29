@@ -1,5 +1,8 @@
 # curious
-A go library that let you list all projects using a given import path
+A go library that let you list all projects using a given import path. 
+
+
+> Please register a github token (no permissions needed) to the environment variable "CURIOUS_GITHUB_TOKEN".
 
 ```go
 package main
