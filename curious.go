@@ -2,7 +2,7 @@ package curious
 
 import (
 	"context"
-	"fmt"
+	"errors"
 	"github.com/google/go-github/v26/github"
 	"golang.org/x/oauth2"
 	"net/url"
@@ -21,16 +21,14 @@ func (p *ProjectInfo) String() string {
 	return p.URL.String()
 }
 
-func GithubSearch(depName string) (projects []*ProjectInfo) {
+func GithubSearch(depName string) (projects []*ProjectInfo, err error) {
 	splits := strings.Split(depName, "/")
 	if len(splits) < 3 {
-		panic("must have at least two slashes in a git url to id owner and project name")
+		return nil, errors.New("must have at least two slashes in a git url to id owner and project name")
 	}
-	source := splits[0]
+	//source := splits[0]
 	owner := splits[1]
 	project := splits[2]
-
-	fmt.Println("fetching info about", source, owner, project)
 
 	src := oauth2.StaticTokenSource(
 		&oauth2.Token{AccessToken: os.Getenv("CURIOUS_GITHUB_TOKEN")},
@@ -45,7 +43,7 @@ func GithubSearch(depName string) (projects []*ProjectInfo) {
 	for {
 		result, _, err := client.Search.Code(ctx, depName, &options)
 		if err != nil {
-			panic(err)
+			return nil, errors.New("when executing GET request - " + err.Error())
 		}
 
 		if len(result.CodeResults) < options.PerPage {
@@ -91,5 +89,5 @@ func GithubSearch(depName string) (projects []*ProjectInfo) {
 		}
 	}
 
-	return projects
+	return projects, nil
 }

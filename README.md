@@ -10,6 +10,11 @@ import (
 )
 
 func main() {
-  projects := curious.GithubSearch("github.com/andersfylling/disgord")
+  projects, err := curious.GithubSearch("github.com/andersfylling/disgord")
+  if err != nil {
+  	panic(err)
+  }
+  
   fmt.Println(len(projects)) // 13
 }
+```
