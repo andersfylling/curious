@@ -10,6 +10,8 @@ import (
 	"strings"
 )
 
+const tokenEnvVar = "CURIOUS_GITHUB_TOKEN"
+
 type ProjectInfo struct {
 	Name   string
 	Author string
@@ -29,9 +31,14 @@ func GithubSearch(depName string) (projects []*ProjectInfo, err error) {
 	//source := splits[0]
 	owner := splits[1]
 	project := splits[2]
+	
+	token := os.Getenv(tokenEnvVar)
+	if token == "" {
+		panic("missing environment variable - " + tokenEnvVar)
+	}
 
 	src := oauth2.StaticTokenSource(
-		&oauth2.Token{AccessToken: os.Getenv("CURIOUS_GITHUB_TOKEN")},
+		&oauth2.Token{AccessToken: token},
 	)
 	ctx := context.Background()
 	httpClient := oauth2.NewClient(ctx, src)
