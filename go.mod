@@ -1,4 +1,4 @@
-module curious
+module github.com/andersfylling/curious
 
 go 1.12
 
